@@ -1,0 +1,5 @@
+mdvl-smart-monitoring (1.0.0) stable; urgency=medium
+
+  * Package created with MDPC 2
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Fri, 14 May 2021 01:50:53 +0200

@@ -1,0 +1,8 @@
+[Unit]
+Description=Collect S.M.A.R.T. data of all NVMe drives to an SQLite database
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/log_nvme_state.pl
+User=root
+Group=root

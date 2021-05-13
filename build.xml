@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build">
+
+<!-- APPLICATION METADATA -->
+<property name="masysma.target"  value="_"/> 
+<property name="mdpc.name"       value="mdvl-smart-monitoring"/>
+<property name="mdpc.section"    value="admin"/>
+<property name="mdpc.arch"       value="all"/>
+<property name="mdpc.descrs"     value="Support tools for S.M.A.R.T monitoring"/>
+<property name="mdpc.recommends" value="smartmontools, nvme-cli"/>
+<property name="mdpc.descrl">
+ This package contains scripts that are intended to supplement
+ smartmontools' capabilities by formatting the last days' SMART values
+ in a textual table.
+ .
+ Additionally, script `log_nvme_state.pl` is supplied together with a
+ Systemd Timer file to collect data about NVMe drives.
+</property>
+
+<property name="mdpc.file.install">
+log_nvme_state.pl /usr/sbin
+smart_to_table.pl /usr/bin
+masysma-log-nvme-state.service /lib/systemd/system
+masysma-log-nvme-state.timer /lib/systemd/system
+</property>
+
+<!-- CI INTEGRATION -->
+<target name="package_triggered" depends="package">
+	<property name="masysma.ci.trigger" value="newver"/>
+</target>
+
+<!-- CONSTANT TPL IMPORT -->
+<property environment="env"/>
+<condition property="masysma.internal.includepath.rel" value="${env.MDVL_CI_PHOENIX_ROOT}" else=".."><isset property="env.MDVL_CI_PHOENIX_ROOT"/></condition>
+<property name="masysma.internal.includepath" location="${masysma.internal.includepath.rel}"/>
+<property name="masysma.internal.loadpath" value="${masysma.internal.includepath}/co-build/ant-build-template.xml"/>
+<condition property="masysma.internal.load" value="file://${masysma.internal.loadpath}" else="https://raw.githubusercontent.com/m7a/co-build/master/ant-build-template.xml"><resourceexists><file file="${masysma.internal.loadpath}"/></resourceexists></condition>
+<import><url url="${masysma.internal.load}"/></import>
+
+</project>
