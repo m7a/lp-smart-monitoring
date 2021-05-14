@@ -2,16 +2,18 @@
 <project default="build">
 
 <!-- APPLICATION METADATA -->
-<property name="masysma.target"  value="_"/> 
-<property name="mdpc.name"       value="mdvl-smart-monitoring"/>
-<property name="mdpc.section"    value="admin"/>
-<property name="mdpc.arch"       value="all"/>
-<property name="mdpc.descrs"     value="Support tools for S.M.A.R.T monitoring"/>
+<property name="masysma.target" value="_"/> 
+<property name="mdpc.name"      value="mdvl-smart-monitoring"/>
+<property name="mdpc.section"   value="admin"/>
+<property name="mdpc.arch"      value="all"/>
+<property name="mdpc.descrs"    value="Support tools for S.M.A.R.T monitoring"/>
+<property name="mdpc.depends">libjson-perl, libdbd-sqlite3-perl,
+				libtext-csv-perl, libtext-table-perl</property>
 <property name="mdpc.recommends" value="smartmontools, nvme-cli"/>
 <property name="mdpc.descrl">
  This package contains scripts that are intended to supplement
  smartmontools' capabilities by formatting the last days' SMART values
- in a textual table.
+ in a text-based table.
  .
  Additionally, script `log_nvme_state.pl` is supplied together with a
  Systemd Timer file to collect data about NVMe drives.
@@ -19,7 +21,8 @@
 
 <property name="mdpc.file.install">
 log_nvme_state.pl /usr/sbin
-smart_to_table.pl /usr/bin
+smart_csv_to_table.pl /usr/bin
+smart_sqlite_to_table.pl /usr/bin
 masysma-log-nvme-state.service /lib/systemd/system
 masysma-log-nvme-state.timer /lib/systemd/system
 </property>

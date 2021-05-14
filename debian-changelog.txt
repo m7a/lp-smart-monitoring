@@ -1,3 +1,9 @@
+mdvl-smart-monitoring (1.0.1) stable; urgency=medium
+
+  * Add script to evaluate SQLite databases populated by NVME attributes.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sat, 15 May 2021 00:25:29 +0200
+
 mdvl-smart-monitoring (1.0.0) stable; urgency=medium
 
   * Package created with MDPC 2

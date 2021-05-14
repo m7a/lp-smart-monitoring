@@ -34,7 +34,7 @@ for my $nvme (@nvmes) {
 	if(not $hasdb) {
 		# Initialize database
 		my $sql = "CREATE TABLE attrlog (".
-			"  date   INTEGER      NOT NULL,".
+			"  date   INTEGER      NOT NULL PRIMARY KEY,".
 			"  device VARCHAR(128) NOT NULL,".
 			"  model  VARCHAR(64)  NOT NULL,".
 			"  serial VARCHAR(64)  NOT NULL";

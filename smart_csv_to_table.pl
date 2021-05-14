@@ -13,11 +13,14 @@ require Text::CSV;   # DEP libtext-csv-perl
 require Text::Table; # DEP libtext-table-perl
 require List::Util;  # all
 
-use Data::Dumper 'Dumper'; # debug only
+# use Data::Dumper 'Dumper'; # debug only
 
-my $DEFAULT_SMARTDDAYS = 8;
+my $DEFAULT_SMARTDDAYS = 7;
 
 my $file = $ARGV[0];
+
+my $monfile = $ARGV[0];
+$monfile =~ s/^(.*)\/attrlog\.(.*)\.csv$/$1\/monitoring.$2.txt/g;
 
 # Fill a ring buffer with the last entries
 # ----------------------------------------
@@ -53,7 +56,8 @@ close $fd;
 # Transpose
 # ---------
 
-my @all_days = ("Attribute"); # prepare table headings
+# prepare table headings
+my @all_days = ({ title => "Attribute", align => "left" });
 my %value_series_by_attributes = ();
 
 my $idx_first_entry;
@@ -77,7 +81,7 @@ do {
 	my $day_date = $day_entry->[0];
 	$day_date =~ /^\d+-\d+-(\d+) \d+:\d+:\d+;?$/ or
 					die("Mismatching date: <$day_date>");
-	push @all_days, $1;
+	push @all_days, { title => $1, align => "left" };
 
 	# process attributes
 	for(my $j = 1; $j < scalar @{$day_entry}; $j++) {
@@ -118,16 +122,31 @@ for my $key (keys %value_series_by_attributes) {
 		# both values are identical or different, output both
 		@newseries = map { $_->[0].":".$_->[1] } @series;
 	} elsif($normuniq == -1) {
-		# means we output normal values
-		@newseries = map { $_->[0] } @series;
+		# means we output normal values, prefix by small `n`.
+		@newseries = map { "n".$_->[0] } @series;
 	} else {
 		# means we output raw values
 		@newseries = map { $_->[1] } @series;
 	}
 	# Now shorten to 7 chars if too long entries exist
-	@newseries = map { (length($_) > 6)? substr($_, 0, 2)."~".
+	@newseries = map { (length($_) > 7)? substr($_, 0, 3)."~".
 						substr($_, -3): $_ } @newseries;
 	$value_series_by_attributes{$key} = [@newseries];
+}
+
+# Assign Meanings to Keys
+# -----------------------
+
+my %key_to_human = ();
+if(-f $monfile) {
+	open my $fd, "<:encoding(UTF-8)", $monfile;
+	while(my $line = <$fd>) {
+		next unless $line =~ /^\s{0,2}(\d{1,3}) ([A-Za-z_-]+)\s+0x/;
+		my $lbl = $2;
+		$lbl =~ tr/_/ /;
+		$key_to_human{$1} = sprintf("%3s %s", $1, $lbl);
+	}
+	close $fd;
 }
 
 # Make Table
@@ -135,8 +154,9 @@ for my $key (keys %value_series_by_attributes) {
 
 my $tbl_obj = Text::Table->new(@all_days);
 for my $key (sort { $a <=> $b } keys %value_series_by_attributes) {
-	# TODO ASTAT THE KEY NUMERIC IS NOT VERY GOOD. NEED TO GET A HUMAN READABLE VARIANT. MY IDEA: EITHER GET THE DATA FROM MONIT WHICH HAS REGULAR HUMAN READABLE VALUES OR SUPPLY A .sample file in /var/lib/smartmontools that the user has to create once for the attribute's names to be found? Reading it from the C struct directly seems to be complicated.
-	$tbl_obj->add(($key, @{$value_series_by_attributes{$key}}));
+	my $display_key = defined($key_to_human{$key})?
+						$key_to_human{$key}: $key;
+	$tbl_obj->add(($display_key, @{$value_series_by_attributes{$key}}));
 }
 
 for my $line ($tbl_obj->table) {
