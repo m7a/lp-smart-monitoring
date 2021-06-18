@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Ma_Sys.ma SMARTD Evaluation 2.0.0, Copyright (c) 2021 Ma_Sys.ma.
+# Ma_Sys.ma SMARTD Evaluation 2.0.1, Copyright (c) 2021 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 
 # Sample invocation
@@ -47,7 +47,8 @@ for my $key (sort keys %{$sql_results}) {
 	for my $subkey (keys %{$sql_results->{$key}}) {
 		next if(($subkey eq "date")  || ($subkey eq "device") ||
 			($subkey eq "model") || ($subkey eq "serial") ||
-			($subkey eq "data_unit_bytes"));
+			($subkey eq "data_unit_bytes") ||
+			($subkey eq "day_of_month"));
 
 		my $value = $sql_results->{$key}->{$subkey};
 		if(($subkey eq "data_units_read") ||

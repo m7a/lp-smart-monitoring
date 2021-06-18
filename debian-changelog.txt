@@ -1,3 +1,9 @@
+mdvl-smart-monitoring (1.0.2) stable; urgency=medium
+
+  * Fix useless "day of month" line (removed).
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sat, 19 Jun 2021 00:29:23 +0200
+
 mdvl-smart-monitoring (1.0.1) stable; urgency=medium
 
   * Add script to evaluate SQLite databases populated by NVME attributes.
