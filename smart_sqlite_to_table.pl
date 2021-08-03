@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Ma_Sys.ma SMARTD Evaluation 2.0.1, Copyright (c) 2021 Ma_Sys.ma.
+# Ma_Sys.ma SMARTD Evaluation 2.0.2, Copyright (c) 2021 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 
 # Sample invocation
@@ -21,7 +21,11 @@ my $dbf = $ARGV[0];
 my $dbh = DBI->connect("dbi:SQLite:dbname=$dbf", "", "");
 
 # Read Data
-my $sql_results = $dbh->selectall_hashref(<<~EOF, "day_of_month");
+# Use "date" for key (rather than day of month) to ensure that sorting yields
+# the expected order by time. It is expected that between months, numbers like
+# 30 31 01 02 03 are to be displayed. Here, it is insufficent to sort by
+# the day of month because that would always yield 01 02 03 30 31.
+my $sql_results = $dbh->selectall_hashref(<<~EOF, "date");
 	SELECT *, strftime("%d", datetime(`date`, 'unixepoch')) AS day_of_month
 	FROM   attrlog
 	WHERE  date IN (SELECT MAX(`date`) AS maxdate
@@ -39,11 +43,16 @@ my $anentry = (values %{$sql_results})[0]; # get any entry
 my $devdesc = $anentry->{model}." at ".$anentry->{device};
 my $dub = $anentry->{data_unit_bytes};
 
+print Dumper($sql_results)."\n";
+
 # Transpose
 my @all_days = ({ title => "Attribute", align => "left" });
 my %series = ();
 for my $key (sort keys %{$sql_results}) {
-	push @all_days, { title => sprintf("%02d", $key), align => "left" };
+	push @all_days, {
+		title => sprintf("%02d", $sql_results->{$key}->{day_of_month}),
+		align => "left"
+	};
 	for my $subkey (keys %{$sql_results->{$key}}) {
 		next if(($subkey eq "date")  || ($subkey eq "device") ||
 			($subkey eq "model") || ($subkey eq "serial") ||
