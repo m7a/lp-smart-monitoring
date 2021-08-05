@@ -43,8 +43,6 @@ my $anentry = (values %{$sql_results})[0]; # get any entry
 my $devdesc = $anentry->{model}." at ".$anentry->{device};
 my $dub = $anentry->{data_unit_bytes};
 
-print Dumper($sql_results)."\n";
-
 # Transpose
 my @all_days = ({ title => "Attribute", align => "left" });
 my %series = ();
