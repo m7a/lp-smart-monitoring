@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Ma_Sys.ma SMARTD Evaluation 2.0.2, Copyright (c) 2021 Ma_Sys.ma.
+# Ma_Sys.ma SMARTD Evaluation 2.0.3, Copyright (c) 2021, 2022 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 
 # Sample invocation
@@ -58,7 +58,10 @@ for my $key (sort keys %{$sql_results}) {
 			($subkey eq "day_of_month"));
 
 		my $value = $sql_results->{$key}->{$subkey};
-		if(($subkey eq "data_units_read") ||
+		if(not(defined($value))) {
+			# ignore NULL values
+			$value = 0;
+		} elsif(($subkey eq "data_units_read") ||
 					($subkey eq "data_units_written")) {
 			$subkey .= " [TiB]";
 			$value = sprintf("%.2f", $value/1024/1024/1024 * $dub);

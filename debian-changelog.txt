@@ -1,3 +1,11 @@
+mdvl-smart-monitoring (1.0.5) stable; urgency=medium
+
+  * Fix handling of NULL values in table.
+    Newly these can occur because table columns might need to be added as
+    S.M.A.R.T reported data evolves?
+
+ -- Ma_Sys.ma Linux-Fan <Ma_Sys.ma@web.de>  Thu, 04 Aug 2022 18:07:13 +0200
+
 mdvl-smart-monitoring (1.0.4) stable; urgency=medium
 
   * Fix regression due to debug output statement.
