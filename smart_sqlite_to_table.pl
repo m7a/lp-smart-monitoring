@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Ma_Sys.ma SMARTD Evaluation 2.0.3, Copyright (c) 2021, 2022 Ma_Sys.ma.
+# Ma_Sys.ma SMARTD Evaluation 2.0.4, Copyright (c) 2021, 2022, 2023 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 
 # Sample invocation
@@ -58,6 +58,7 @@ for my $key (sort keys %{$sql_results}) {
 			($subkey eq "day_of_month"));
 
 		my $value = $sql_results->{$key}->{$subkey};
+		$value =~ s/,//g;
 		if(not(defined($value))) {
 			# ignore NULL values
 			$value = 0;

@@ -1,3 +1,9 @@
+mdvl-smart-monitoring (1.0.6) stable; urgency=medium
+
+  * Update to Debian 12 Compatibility
+
+ -- Ma_Sys.ma Linux-Fan <info@masysma.net>  Sun, 25 Jun 2023 01:30:50 +0200
+
 mdvl-smart-monitoring (1.0.5) stable; urgency=medium
 
   * Fix handling of NULL values in table.
