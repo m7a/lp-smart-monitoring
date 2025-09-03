@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE php_smartd_auswertung [
+<!ELEMENT php_smartd_auswertung (general_configuration, devices)>
+<!ELEMENT general_configuration (set)*>
+<!ELEMENT set EMPTY>
+<!ATTLIST set key CDATA #REQUIRED>
+<!ATTLIST set val CDATA #REQUIRED>
+<!ELEMENT devices (device)*>
+<!ATTLIST devices table_prefix CDATA "">
+<!ATTLIST devices table_suffix CDATA "">
+<!ATTLIST devices days CDATA "30">
+<!ELEMENT device (attribute)*>
+<!ATTLIST device title CDATA #IMPLIED>
+<!ATTLIST device table CDATA #REQUIRED>
+<!ELEMENT attribute EMPTY>
+<!ATTLIST attribute id CDATA #REQUIRED>
+<!ATTLIST attribute title CDATA #REQUIRED>
+<!ATTLIST attribute raw (true | false) "false">
+<!ATTLIST attribute chg (normal | less_important | important) "important">
+<!ATTLIST attribute fac CDATA "1.0">
+<!ATTLIST attribute add CDATA "0.0">
+]>
+
+<php_smartd_auswertung>
+	<general_configuration>
+		<set key="checkfile" val="php_smartd_auswertung_checked.txt"/>
+		<set key="checkdate" val="d.m.Y"/>
+	</general_configuration>
+	<devices table_prefix="/var/lib/smartmontools/attrlog." table_suffix=".ata.csv">
+		<device title="2000 GB Samsung" table="Samsung_SSD_850_EVO_2TB-S2RMNX0H900402N">
+			<attribute id="5" title="Reallocated Sector Count" raw="true"/>
+			<attribute id="9" title="Power-on Hours" raw="true" chg="normal"/>
+			<attribute id="12" title="Power-on Count" raw="true" chg="normal"/>
+			<attribute id="177" title="Wear Leveling Count" raw="true" chg="less_important"/>
+			<attribute id="179" title="Used Reserved Block Count (total)" raw="true"/>
+			<attribute id="181" title="Program Fail Count (total)" raw="true"/>
+			<attribute id="182" title="Erase Fail Count (total)" raw="true"/>
+			<attribute id="183" title="Runtime Bad Block (total)" raw="true"/>
+			<attribute id="187" title="Uncorrectable Error Count" raw="true"/>
+			<attribute id="190" title="Aairflow Temperature Celsius" raw="true" chg="normal"/>
+			<attribute id="195" title="ECC Error Rate" raw="true"/>
+			<attribute id="199" title="CRC Error Count" raw="true"/>
+			<attribute id="235" title="POR Recovery Count" raw="true" chg="less_important"/>
+			<attribute id="241" title="Total LBAs Written [GiB]" raw="true" chg="normal" fac="4.76837158203125E-7"/>
+		</device>
+	</devices>
+</php_smartd_auswertung>
